@@ -88,6 +88,17 @@
     <Compile Include="GlobalHook.cs" />
     <Compile Include="GlobalKeyShortcut.cs" />
     <Compile Include="IConfig.cs" />
+    <Compile Include="IServiceProvider.cs" />
+    <Compile Include="WordControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WordControl.Designer.cs">
+      <DependentUpon>WordControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WordControlCodeBehind.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WordDefinition.cs" />
     <Compile Include="WordFinders\DictionaryFinder.cs" />
     <Compile Include="WordFinders\GoogleFinder.cs" />
     <Compile Include="WordFinders\IWordFinder.cs" />
@@ -106,6 +117,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="WordControl.resx">
+      <DependentUpon>WordControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="client_id.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

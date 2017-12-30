@@ -14,7 +14,6 @@ namespace WordCatcher
     public partial class Form1 : Form
     {
         private IConfig _config;
-        private List<IWordFinder> _wordFinders = new List<IWordFinder>();
 
         public Form1(IConfig config)
         {
@@ -31,25 +30,8 @@ namespace WordCatcher
             GlobalKeyShortcut.Instance.init();
 #endif
             InitService();
+            InitFinders();
             LoadChildren("root", null);
-
-            _wordFinders.Add(new DictionaryFinder(_config.Dictionary_SearchUrl, _config.Dictionary_TemplateFile));
-            _wordFinders.Add(new GoogleFinder(_config.Google_SearchUrl, _config.Google_TemplateFile));
-
-            tabControl1.TabPages.Clear();
-
-            foreach (var finder in _wordFinders)
-            {
-                var page = new TabPage(finder.Name);
-                page.Tag = finder;
-
-                var browser = new WebBrowser();
-                browser.Dock = DockStyle.Fill;
-                browser.ScriptErrorsSuppressed = true;
-                page.Controls.Add(browser);
-
-                tabControl1.TabPages.Add(page);
-            }
         }
 
         private void Instance_Shortcut(object sender, GlobalKeyShortcutEventArgs args)
@@ -63,14 +45,14 @@ namespace WordCatcher
 
         private void goBtn_Click(object sender, EventArgs e)
         {
-            Search(wordTxt.Text);
+            NewWord(wordTxt.Text);
         }
 
         private void wordTxt_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r')
             {
-                Search(wordTxt.Text);
+                NewWord(wordTxt.Text);
             }
         }
 
@@ -103,6 +85,7 @@ namespace WordCatcher
             {
                 var file = (File)driveTree.SelectedNode.Tag;
                 SaveRecord(file.Id, wordTxt.Text, text1Txt.Text, text2Txt.Text, text3Txt.Text, text4Txt.Text, extraInfoTxt.Text);
+                HistoryBack();
                 MessageBox.Show("Saved ...");
             }
         }
@@ -126,6 +109,16 @@ namespace WordCatcher
 
             controls[index].Text = Clipboard.GetText();
             tabControl2.SelectTab(index);
+        }
+
+        private void backBtn_Click(object sender, EventArgs e)
+        {
+            HistoryBack();
+        }
+
+        private void tabControl2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tabControl2.SelectedTab.Controls[0].Focus();
         }
     }
 }

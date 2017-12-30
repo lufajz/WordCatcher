@@ -19,18 +19,21 @@ using Google.Apis.Sheets.v4.Data;
 
 namespace WordCatcher
 {
-    public partial class Form1
+    public partial class Form1 : IWordTabHost
     {
         static string ApplicationName = "Flashcards";
 
-        class FileItem
-        {
-            public string Id { get; set; }
-            public List<FileItem> Children { get; } = new List<FileItem>();
-        }
+        //class FileItem
+        //{
+        //    public string Id { get; set; }
+        //    public List<FileItem> Children { get; } = new List<FileItem>();
+        //}
 
         private DriveService _driveService;
         private SheetsService _sheetsService;
+        private List<IWordFinder> _wordFinders = new List<IWordFinder>();
+
+        public IEnumerable<IWordFinder> Finders => 
 
         private void InitService()
         {
@@ -44,7 +47,7 @@ namespace WordCatcher
 
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
-                    new string[]{ DriveService.Scope.Drive, DriveService.Scope.DriveFile, DriveService.Scope.DriveMetadata },
+                    new string[] { DriveService.Scope.Drive, DriveService.Scope.DriveFile, DriveService.Scope.DriveMetadata },
                     "user",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
@@ -75,6 +78,12 @@ namespace WordCatcher
                     ApplicationName = ApplicationName,
                 });
             }
+        }
+
+        private void InitFinders()
+        {
+            _wordFinders.Add(new DictionaryFinder(_config.Dictionary_SearchUrl, _config.Dictionary_TemplateFile));
+            _wordFinders.Add(new GoogleFinder(_config.Google_SearchUrl, _config.Google_TemplateFile));
         }
 
         private void LoadChildren(string parentId, TreeNode parentNode)
@@ -130,28 +139,6 @@ namespace WordCatcher
             var response = request.Execute();
         }
 
-        private void Search(string word)
-        {
-            foreach(var page in tabControl1.TabPages)
-            {
-                var tabPage = page as TabPage;
-                var browser = tabPage.Controls.OfType<WebBrowser>().FirstOrDefault();
-
-                if (browser != null)
-                {
-                    var finder = (IWordFinder)(tabPage.Tag);
-
-                    try
-                    {
-                        finder.FindDefinition(word, browser);
-                    }
-                    catch(Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, $"Finder {finder.Name} error");
-                    }
-                }                
-            }            
-        }
 
         private void CreateNewFile(TreeNode node, string name)
         {
@@ -181,6 +168,16 @@ namespace WordCatcher
             fileNode.NodeFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold);
 
             node.Nodes.Add(fileNode);
+        }
+
+        public void WordChanged(string word)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(WordDefinition word)
+        {
+            throw new NotImplementedException();
         }
     }
 }
