@@ -21,7 +21,6 @@ namespace WordCatcher
 {
     public partial class Form1
     {
-        static string[] Scopes = { DriveService.Scope.DriveReadonly };
         static string ApplicationName = "Flashcards";
 
         class FileItem
@@ -45,7 +44,7 @@ namespace WordCatcher
 
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
-                    new string[]{ DriveService.Scope.DriveReadonly },
+                    new string[]{ DriveService.Scope.Drive, DriveService.Scope.DriveFile, DriveService.Scope.DriveMetadata },
                     "user",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
@@ -114,19 +113,14 @@ namespace WordCatcher
             while (pageToken != null);
         }
 
-        private void SaveRecord(string fileId)
+        private void SaveRecord(string fileId, string word, string text1, string text2, string text3, string text4, string extraInfo)
         {
             var body = new ValueRange();
             body.Values = new List<IList<object>>()
             {
                 new List<object>()
                 {
-                    "a", "b", "c"
-                },
-
-                new List<object>()
-                {
-                    "aa", "bb", "cc"
+                    word, text1, text2, text3, text4, extraInfo
                 }
             };
 
@@ -146,9 +140,47 @@ namespace WordCatcher
                 if (browser != null)
                 {
                     var finder = (IWordFinder)(tabPage.Tag);
-                    finder.FindDefinition(word, browser);
+
+                    try
+                    {
+                        finder.FindDefinition(word, browser);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, $"Finder {finder.Name} error");
+                    }
                 }                
             }            
+        }
+
+        private void CreateNewFile(TreeNode node, string name)
+        {
+            var folder = (Google.Apis.Drive.v3.Data.File)driveTree.SelectedNode.Tag;
+
+            var sheet = new Spreadsheet();
+            sheet.Properties = new SpreadsheetProperties()
+            {
+                Title = name
+            };
+
+            var request = _sheetsService.Spreadsheets.Create(sheet);
+            sheet = request.Execute();
+
+            var getRequest = _driveService.Files.Get(sheet.SpreadsheetId);
+            getRequest.Fields = "parents, id, name, mimeType";
+            var file = getRequest.Execute();
+            var previousParents = String.Join(",", file.Parents);
+            var updateRequest = _driveService.Files.Update(new Google.Apis.Drive.v3.Data.File(), sheet.SpreadsheetId);
+            updateRequest.Fields = "id, parents";
+            updateRequest.AddParents = folder.Id;
+            updateRequest.RemoveParents = previousParents;
+            file = updateRequest.Execute();
+
+            var fileNode = new TreeNode(name);
+            fileNode.Tag = file;
+            fileNode.NodeFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold);
+
+            node.Nodes.Add(fileNode);
         }
     }
 }

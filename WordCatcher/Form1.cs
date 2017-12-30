@@ -102,8 +102,30 @@ namespace WordCatcher
             else
             {
                 var file = (File)driveTree.SelectedNode.Tag;
-                SaveRecord(file.Id);
+                SaveRecord(file.Id, wordTxt.Text, text1Txt.Text, text2Txt.Text, text3Txt.Text, text4Txt.Text, extraInfoTxt.Text);
+                MessageBox.Show("Saved ...");
             }
+        }
+
+        private void newFileBtn_Click(object sender, EventArgs e)
+        {
+            if (driveTree.SelectedNode == null)
+            {
+                MessageBox.Show("Select a file !");
+            }
+            else
+            {
+                CreateNewFile(driveTree.SelectedNode, newFileTxt.Text);
+            }
+        }
+
+        private void toText1Btn_Click(object sender, EventArgs e)
+        {
+            var controls = new TextBox[] { text1Txt, text2Txt, text3Txt, text4Txt };
+            var index = Int32.Parse((sender as Control).Tag.ToString()) - 1;
+
+            controls[index].Text = Clipboard.GetText();
+            tabControl2.SelectTab(index);
         }
     }
 }

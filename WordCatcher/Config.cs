@@ -13,7 +13,7 @@ namespace WordCatcher
         public string Dictionary_SearchUrl => "http://www.dictionary.com/browse/{WORD}";
         public string Dictionary_TemplateFile => $"{ExePath}\\Template_Dictionary.html";
 
-        public string Google_SearchUrl => "https://www.google.cz/search?q={WORD}+definition";
+        public string Google_SearchUrl => "https://www.google.com/search?q={WORD}+definition";
         public string Google_TemplateFile => $"{ExePath}\\Template_Google.html";
 
         public string ClientSecretFile => $"{ExePath}\\client_id.json";
