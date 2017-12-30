@@ -21,19 +21,11 @@ namespace WordCatcher
 {
     public partial class Form1 : IWordTabHost
     {
-        static string ApplicationName = "Flashcards";
-
-        //class FileItem
-        //{
-        //    public string Id { get; set; }
-        //    public List<FileItem> Children { get; } = new List<FileItem>();
-        //}
+        static string ApplicationName = "Flashcards";        
 
         private DriveService _driveService;
         private SheetsService _sheetsService;
         private List<IWordFinder> _wordFinders = new List<IWordFinder>();
-
-        public IEnumerable<IWordFinder> Finders => 
 
         private void InitService()
         {
@@ -122,14 +114,14 @@ namespace WordCatcher
             while (pageToken != null);
         }
 
-        private void SaveRecord(string fileId, string word, string text1, string text2, string text3, string text4, string extraInfo)
+        private void SaveRecord(string fileId, WordDefinition word)
         {
             var body = new ValueRange();
             body.Values = new List<IList<object>>()
             {
                 new List<object>()
                 {
-                    word, text1, text2, text3, text4, extraInfo
+                    word.Word, word.Texts[0], word.Texts[1], word.Texts[2], word.Texts[3], word.ExtraInfo
                 }
             };
 
@@ -170,14 +162,50 @@ namespace WordCatcher
             node.Nodes.Add(fileNode);
         }
 
+        private void NewWordTab(string word = null)
+        {
+            var tab = new TabPage();
+            var w = new WordControl(this);
+            w.Init(word);
+            tab.Controls.Add(w);
+            tabControl1.TabPages.Add(tab);
+        }
+
+        #region IWordTabHost
+
+        public IEnumerable<IWordFinder> Finders => _wordFinders;
+
         public void WordChanged(string word)
         {
-            throw new NotImplementedException();
+            if (tabControl1.SelectedTab != null)
+            {
+                tabControl1.SelectedTab.Text = word;
+            }
         }
 
         public void Save(WordDefinition word)
         {
-            throw new NotImplementedException();
+            if (driveTree.SelectedNode == null)
+            {
+                MessageBox.Show("Select a file !");
+            }
+            else if ((driveTree.SelectedNode.Tag as Google.Apis.Drive.v3.Data.File).MimeType == "application/vnd.google-apps.folder")
+            {
+                MessageBox.Show("Select a file, not a folder !");
+            }
+            else
+            {
+                var file = (Google.Apis.Drive.v3.Data.File)driveTree.SelectedNode.Tag;
+                SaveRecord(file.Id, word);
+                MessageBox.Show("Saved ...");
+
+                if (tabControl1.SelectedTab != null)
+                {
+                    tabControl1.TabPages.Remove(tabControl1.SelectedTab);
+                }
+            }
         }
+
+        #endregion
     }
 }

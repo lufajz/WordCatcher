@@ -32,6 +32,7 @@ namespace WordCatcher
             InitService();
             InitFinders();
             LoadChildren("root", null);
+            NewWordTab();
         }
 
         private void Instance_Shortcut(object sender, GlobalKeyShortcutEventArgs args)
@@ -39,20 +40,7 @@ namespace WordCatcher
             if (args.Pressed)
             {
                 Activate();
-                wordTxt.Text = Clipboard.GetText();
-            }
-        }
-
-        private void goBtn_Click(object sender, EventArgs e)
-        {
-            NewWord(wordTxt.Text);
-        }
-
-        private void wordTxt_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '\r')
-            {
-                NewWord(wordTxt.Text);
+                // wordTxt.Text = Clipboard.GetText();
             }
         }
 
@@ -75,21 +63,6 @@ namespace WordCatcher
             }
         }
 
-        private void saveBtn_Click(object sender, EventArgs e)
-        {
-            if (driveTree.SelectedNode == null)
-            {
-                MessageBox.Show("Select a file !");
-            }
-            else
-            {
-                var file = (File)driveTree.SelectedNode.Tag;
-                SaveRecord(file.Id, wordTxt.Text, text1Txt.Text, text2Txt.Text, text3Txt.Text, text4Txt.Text, extraInfoTxt.Text);
-                HistoryBack();
-                MessageBox.Show("Saved ...");
-            }
-        }
-
         private void newFileBtn_Click(object sender, EventArgs e)
         {
             if (driveTree.SelectedNode == null)
@@ -102,23 +75,23 @@ namespace WordCatcher
             }
         }
 
-        private void toText1Btn_Click(object sender, EventArgs e)
+        private void newTabBtn_Click(object sender, EventArgs e)
         {
-            var controls = new TextBox[] { text1Txt, text2Txt, text3Txt, text4Txt };
-            var index = Int32.Parse((sender as Control).Tag.ToString()) - 1;
-
-            controls[index].Text = Clipboard.GetText();
-            tabControl2.SelectTab(index);
+            NewWordTab();
         }
 
-        private void backBtn_Click(object sender, EventArgs e)
+        private void addToQueueBtn_Click(object sender, EventArgs e)
         {
-            HistoryBack();
+            queueLbx.Items.Add(Clipboard.GetText());
         }
 
-        private void tabControl2_SelectedIndexChanged(object sender, EventArgs e)
+        private void takeFromQueueBtn_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab.Controls[0].Focus();
+            if (queueLbx.SelectedItem != null)
+            {
+                NewWordTab((string)queueLbx.SelectedItem);
+                queueLbx.Items.Remove(queueLbx.SelectedItem);
+            }
         }
     }
 }

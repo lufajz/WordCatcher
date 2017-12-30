@@ -9,7 +9,7 @@ namespace WordCatcher
 {
     public partial class WordControl
     {
-        private void Init()
+        public void Init(string word)
         {
             tabControl1.TabPages.Clear();
 
@@ -24,6 +24,12 @@ namespace WordCatcher
                 page.Controls.Add(browser);
 
                 tabControl1.TabPages.Add(page);
+
+                if (word != null)
+                {
+                    Search(word);
+                    _provider.WordChanged(word);
+                }
             }
         }
 
@@ -58,7 +64,8 @@ namespace WordCatcher
                     }
                 }
             }
-        }
 
+            _provider.WordChanged(word);
+        }
     }
 }
