@@ -13,7 +13,7 @@ namespace WordCatcher
         {
             tabControl1.TabPages.Clear();
 
-            foreach (var finder in _provider.Finders)
+            foreach (var finder in _tabHost.Finders)
             {
                 var page = new TabPage(finder.Name);
                 page.Tag = finder;
@@ -61,7 +61,7 @@ namespace WordCatcher
                 }
             }
 
-            _provider.WordChanged(word);
+            _tabHost.WordChanged(word);
         }
     }
 }

@@ -12,13 +12,13 @@ namespace WordCatcher
 {
     public partial class WordControl : UserControl
     {
-        private IWordTabHost _provider;
+        private IWordTabHost _tabHost;
 
         public WordControl(IWordTabHost provider)
         {
             InitializeComponent();
 
-            _provider = provider;
+            _tabHost = provider;
         }
 
         private void goBtn_Click(object sender, EventArgs e)
@@ -36,7 +36,7 @@ namespace WordCatcher
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            _provider.Save(new WordDefinition
+            _tabHost.Save(new WordDefinition
             {
                 Word = wordTxt.Text,
                 ExtraInfo = extraInfoTxt.Text,

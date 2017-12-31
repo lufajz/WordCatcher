@@ -131,7 +131,6 @@ namespace WordCatcher
             var response = request.Execute();
         }
 
-
         private void CreateNewFile(TreeNode node, string name)
         {
             var folder = (Google.Apis.Drive.v3.Data.File)driveTree.SelectedNode.Tag;
@@ -141,6 +140,23 @@ namespace WordCatcher
             {
                 Title = name
             };
+            sheet.Sheets[0].Data.Add(new GridData
+            {
+                RowData = new List<RowData>
+                {
+                    new RowData
+                    {
+                        Values = new List<CellData>
+                        {
+                            new CellData
+                            {
+                                UserEnteredValue = new ExtendedValue { StringValue = "X" }
+                            }
+                        }
+                    }
+
+                }
+            });
 
             var request = _sheetsService.Spreadsheets.Create(sheet);
             sheet = request.Execute();
