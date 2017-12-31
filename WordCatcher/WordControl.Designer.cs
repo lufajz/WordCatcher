@@ -256,7 +256,6 @@
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "WordControl";
             this.Size = new System.Drawing.Size(899, 504);
-            this.Load += new System.EventHandler(this.WordControl_Load);
             this.tabControl2.ResumeLayout(false);
             this.text1Tab.ResumeLayout(false);
             this.text1Tab.PerformLayout();

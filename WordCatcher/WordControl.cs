@@ -17,6 +17,7 @@ namespace WordCatcher
         public WordControl(IWordTabHost provider)
         {
             InitializeComponent();
+
             _provider = provider;
         }
 
@@ -61,11 +62,6 @@ namespace WordCatcher
 
             controls[index].Text = Clipboard.GetText();
             tabControl2.SelectTab(index);
-        }
-
-        private void WordControl_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

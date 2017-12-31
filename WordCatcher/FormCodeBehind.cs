@@ -166,9 +166,15 @@ namespace WordCatcher
         {
             var tab = new TabPage();
             var w = new WordControl(this);
-            w.Init(word);
+            w.Init();
             tab.Controls.Add(w);
             tabControl1.TabPages.Add(tab);
+            tabControl1.SelectTab(tab);
+            
+            if (word != null)
+            {
+                w.Search(word);
+            }
         }
 
         #region IWordTabHost
