@@ -13,9 +13,9 @@ namespace WordCatcher
 {
     public partial class Form1 : Form
     {
-        private IConfig _config;
+        private ILocalConfig _config;
 
-        public Form1(IConfig config)
+        public Form1(ILocalConfig config)
         {
             _config = config;
             InitializeComponent();
@@ -84,6 +84,7 @@ namespace WordCatcher
         private void addToQueueBtn_Click(object sender, EventArgs e)
         {
             queueLbx.Items.Add(Clipboard.GetText());
+            _sharedConfig.Queue.Add(Clipboard.GetText());
         }
 
         private void takeFromQueueBtn_Click(object sender, EventArgs e)

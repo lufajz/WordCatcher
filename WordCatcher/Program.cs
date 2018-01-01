@@ -26,7 +26,7 @@ namespace WordCatcher
             Application.SetCompatibleTextRenderingDefault(false);
 
             // TODO: DI
-            var form = new Form1(new Config());
+            var form = new Form1(new LocalConfig());
             Application.Run(form);
         }
 

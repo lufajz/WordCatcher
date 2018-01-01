@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WordCatcher
 {
-    public interface IConfig
+    public interface ILocalConfig
     {
         string Dictionary_SearchUrl { get; }
         string Dictionary_TemplateFile { get; }

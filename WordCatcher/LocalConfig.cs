@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WordCatcher
 {
-    public class Config : IConfig
+    public class LocalConfig : ILocalConfig
     {
         public string Dictionary_SearchUrl => "http://www.dictionary.com/browse/{WORD}";
         public string Dictionary_TemplateFile => $"{ExePath}\\Template_Dictionary.html";

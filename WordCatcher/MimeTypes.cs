@@ -10,5 +10,6 @@ namespace WordCatcher
     {
         public const string Spreadsheet = "application/vnd.google-apps.spreadsheet";
         public const string Folder = "application/vnd.google-apps.folder";
+        public const string ConfigJson = "application/json";
     }
 }

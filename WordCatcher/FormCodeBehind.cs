@@ -16,6 +16,8 @@ using System.Threading;
 using System.Windows.Forms;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using Newtonsoft.Json;
+using Google.Apis.Upload;
 
 namespace WordCatcher
 {
@@ -25,6 +27,8 @@ namespace WordCatcher
 
         private DriveService _driveService;
         private SheetsService _sheetsService;
+        private Google.Apis.Drive.v3.Data.File _configFile;
+        private SharedConfig _sharedConfig;
         private List<IWordFinder> _wordFinders = new List<IWordFinder>();
 
         private void InitService()
@@ -54,16 +58,46 @@ namespace WordCatcher
                 var request = _driveService.Files.List();
                 request.Q = $"name = 'flashcards_config.json' and trashed = false";
                 request.Spaces = "drive";
-                request.Fields = "id";
+                request.Fields = "files(id)";
 
-                var result = request.Execute();
-                if (result.Files.Count == 0)
+                try
                 {
-                    // TODO: create config file
+                    var result = request.Execute();
+
+                    if (result.Files.Count == 0)
+                    {
+                        // TODO: create config file
+                        var configFile = new Google.Apis.Drive.v3.Data.File();
+                        configFile.MimeType = MimeTypes.ConfigJson;
+                        configFile.Name = "flashcards_config.json";
+                        configFile.Parents = new List<string> { "root" }; // TODO
+
+                        _sharedConfig = new SharedConfig();
+
+                        using (var s = new MemoryStream())
+                        {
+                            var binary = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_sharedConfig));
+                            s.Write(binary, 0, binary.Length);
+                            s.Seek(0, SeekOrigin.Begin);
+                            var u = _driveService.Files.Create(configFile, s, MimeTypes.ConfigJson);
+                            u.Upload();
+                            _configFile = u.ResponseBody;
+                        }
+                    }
+                    else
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            _configFile = result.Files.First();
+                            _driveService.Files.Get(_configFile.Id).DownloadWithStatus(ms);
+                            ms.Seek(0, SeekOrigin.Begin);
+                            _sharedConfig = new JsonSerializer().Deserialize<SharedConfig>(new JsonTextReader(new StreamReader(ms, Encoding.UTF8)));
+                        }
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-
+                    MessageBox.Show(ex.Message);
                 }
             }
 
@@ -128,6 +162,27 @@ namespace WordCatcher
                 pageToken = result.NextPageToken;
             }
             while (pageToken != null);
+        }
+
+        private async Task SaveSharedConfigAsync()
+        {
+            using (var s = new MemoryStream())
+            {
+                var binary = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_sharedConfig));
+                s.Write(binary, 0, binary.Length);
+                s.Seek(0, SeekOrigin.Begin);
+
+                var request = _driveService.Files.Update(new Google.Apis.Drive.v3.Data.File(), _configFile.Id, s, MimeTypes.ConfigJson);
+                request.ProgressChanged += (p) =>
+                {
+                    if (p.Status == UploadStatus.Failed)
+                    {
+                        throw p.Exception;
+                    }
+                };
+
+                await request.UploadAsync();
+            }
         }
 
         private void AppendToSheet(string fileId, string range, ValueRange body)
