@@ -39,7 +39,7 @@ namespace WordCatcher
 
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
-                    new string[] { DriveService.Scope.Drive, DriveService.Scope.DriveFile, DriveService.Scope.DriveMetadata },
+                    new string[] { DriveService.Scope.Drive, DriveService.Scope.DriveFile, DriveService.Scope.DriveMetadata, DriveService.Scope.DriveMetadata },
                     "user",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
@@ -49,6 +49,22 @@ namespace WordCatcher
                     HttpClientInitializer = credential,
                     ApplicationName = ApplicationName,
                 });
+
+                // search for config file
+                var request = _driveService.Files.List();
+                request.Q = $"name = 'flashcards_config.json' and trashed = false";
+                request.Spaces = "drive";
+                request.Fields = "id";
+
+                var result = request.Execute();
+                if (result.Files.Count == 0)
+                {
+                    // TODO: create config file
+                }
+                else
+                {
+
+                }
             }
 
             using (var stream =
@@ -194,6 +210,11 @@ namespace WordCatcher
             {
                 w.Search(word);
             }
+        }
+
+        private void AddToFavorites(string fileName)
+        {
+
         }
 
         #region IWordTabHost

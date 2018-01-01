@@ -94,5 +94,23 @@ namespace WordCatcher
                 queueLbx.Items.Remove(queueLbx.SelectedItem);
             }
         }
+
+        private void addFileToFavoritesBtn_Click(object sender, EventArgs e)
+        {
+            if (!driveTree.SelectedNode.IsSpreadsheet())
+            {
+                MessageBox.Show("Select spreadsheet !");
+            }
+            else
+            {
+                var fileName = (driveTree.SelectedNode.Tag as File).Name;
+
+                if (!favoritesLbx.Items.Contains(fileName))
+                {
+                    AddToFavorites(fileName);
+                    favoritesLbx.Items.Add(fileName);
+                }
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace WordCatcher
         public string Word { get; set; }
         public string[] Texts { get; set; } = new string[4];
         public string ExtraInfo { get; set; }
+        public string Notes { get; set; }
     }
 }

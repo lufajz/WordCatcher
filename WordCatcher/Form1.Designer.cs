@@ -36,23 +36,28 @@
             this.newTabBtn = new System.Windows.Forms.Button();
             this.addToQueueBtn = new System.Windows.Forms.Button();
             this.takeFromQueueBtn = new System.Windows.Forms.Button();
+            this.favoritesLbx = new System.Windows.Forms.ListBox();
+            this.addFileToFavoritesBtn = new System.Windows.Forms.Button();
+            this.removeFromFavoritesBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // driveTree
             // 
-            this.driveTree.Location = new System.Drawing.Point(902, 331);
-            this.driveTree.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.driveTree.HideSelection = false;
+            this.driveTree.HotTracking = true;
+            this.driveTree.Location = new System.Drawing.Point(1353, 543);
             this.driveTree.Name = "driveTree";
-            this.driveTree.Size = new System.Drawing.Size(164, 158);
+            this.driveTree.Size = new System.Drawing.Size(244, 207);
             this.driveTree.TabIndex = 4;
             this.driveTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.driveTree_BeforeExpand);
             this.driveTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.driveTree_AfterExpand);
             // 
             // newFileBtn
             // 
-            this.newFileBtn.Location = new System.Drawing.Point(906, 490);
+            this.newFileBtn.Location = new System.Drawing.Point(1359, 754);
+            this.newFileBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.newFileBtn.Name = "newFileBtn";
-            this.newFileBtn.Size = new System.Drawing.Size(75, 23);
+            this.newFileBtn.Size = new System.Drawing.Size(112, 35);
             this.newFileBtn.TabIndex = 7;
             this.newFileBtn.Text = "New file";
             this.newFileBtn.UseVisualStyleBackColor = true;
@@ -60,32 +65,37 @@
             // 
             // newFileTxt
             // 
-            this.newFileTxt.Location = new System.Drawing.Point(986, 493);
+            this.newFileTxt.Location = new System.Drawing.Point(1479, 758);
+            this.newFileTxt.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.newFileTxt.Name = "newFileTxt";
-            this.newFileTxt.Size = new System.Drawing.Size(80, 20);
+            this.newFileTxt.Size = new System.Drawing.Size(118, 26);
             this.newFileTxt.TabIndex = 8;
             // 
             // queueLbx
             // 
             this.queueLbx.FormattingEnabled = true;
-            this.queueLbx.Location = new System.Drawing.Point(905, 41);
+            this.queueLbx.ItemHeight = 20;
+            this.queueLbx.Location = new System.Drawing.Point(1358, 63);
+            this.queueLbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.queueLbx.Name = "queueLbx";
-            this.queueLbx.Size = new System.Drawing.Size(164, 251);
+            this.queueLbx.Size = new System.Drawing.Size(244, 204);
             this.queueLbx.TabIndex = 9;
             // 
             // tabControl1
             // 
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Location = new System.Drawing.Point(18, 18);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(888, 527);
+            this.tabControl1.Size = new System.Drawing.Size(1328, 811);
             this.tabControl1.TabIndex = 10;
             // 
             // newTabBtn
             // 
-            this.newTabBtn.Location = new System.Drawing.Point(907, 12);
+            this.newTabBtn.Location = new System.Drawing.Point(1360, 18);
+            this.newTabBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.newTabBtn.Name = "newTabBtn";
-            this.newTabBtn.Size = new System.Drawing.Size(162, 23);
+            this.newTabBtn.Size = new System.Drawing.Size(243, 35);
             this.newTabBtn.TabIndex = 11;
             this.newTabBtn.Text = "New tab";
             this.newTabBtn.UseVisualStyleBackColor = true;
@@ -93,9 +103,10 @@
             // 
             // addToQueueBtn
             // 
-            this.addToQueueBtn.Location = new System.Drawing.Point(905, 298);
+            this.addToQueueBtn.Location = new System.Drawing.Point(1360, 277);
+            this.addToQueueBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.addToQueueBtn.Name = "addToQueueBtn";
-            this.addToQueueBtn.Size = new System.Drawing.Size(61, 23);
+            this.addToQueueBtn.Size = new System.Drawing.Size(92, 35);
             this.addToQueueBtn.TabIndex = 12;
             this.addToQueueBtn.Text = "Add";
             this.addToQueueBtn.UseVisualStyleBackColor = true;
@@ -103,19 +114,54 @@
             // 
             // takeFromQueueBtn
             // 
-            this.takeFromQueueBtn.Location = new System.Drawing.Point(1008, 298);
+            this.takeFromQueueBtn.Location = new System.Drawing.Point(1514, 277);
+            this.takeFromQueueBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.takeFromQueueBtn.Name = "takeFromQueueBtn";
-            this.takeFromQueueBtn.Size = new System.Drawing.Size(61, 23);
+            this.takeFromQueueBtn.Size = new System.Drawing.Size(92, 35);
             this.takeFromQueueBtn.TabIndex = 13;
             this.takeFromQueueBtn.Text = "Take";
             this.takeFromQueueBtn.UseVisualStyleBackColor = true;
             this.takeFromQueueBtn.Click += new System.EventHandler(this.takeFromQueueBtn_Click);
             // 
+            // favoritesLbx
+            // 
+            this.favoritesLbx.FormattingEnabled = true;
+            this.favoritesLbx.ItemHeight = 20;
+            this.favoritesLbx.Location = new System.Drawing.Point(1359, 322);
+            this.favoritesLbx.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.favoritesLbx.Name = "favoritesLbx";
+            this.favoritesLbx.Size = new System.Drawing.Size(244, 164);
+            this.favoritesLbx.TabIndex = 14;
+            // 
+            // addFileToFavoritesBtn
+            // 
+            this.addFileToFavoritesBtn.Location = new System.Drawing.Point(1359, 496);
+            this.addFileToFavoritesBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.addFileToFavoritesBtn.Name = "addFileToFavoritesBtn";
+            this.addFileToFavoritesBtn.Size = new System.Drawing.Size(92, 35);
+            this.addFileToFavoritesBtn.TabIndex = 15;
+            this.addFileToFavoritesBtn.Text = "Bookmark";
+            this.addFileToFavoritesBtn.UseVisualStyleBackColor = true;
+            this.addFileToFavoritesBtn.Click += new System.EventHandler(this.addFileToFavoritesBtn_Click);
+            // 
+            // removeFromFavoritesBtn
+            // 
+            this.removeFromFavoritesBtn.Location = new System.Drawing.Point(1514, 496);
+            this.removeFromFavoritesBtn.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.removeFromFavoritesBtn.Name = "removeFromFavoritesBtn";
+            this.removeFromFavoritesBtn.Size = new System.Drawing.Size(92, 35);
+            this.removeFromFavoritesBtn.TabIndex = 16;
+            this.removeFromFavoritesBtn.Text = "Remove";
+            this.removeFromFavoritesBtn.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1077, 551);
+            this.ClientSize = new System.Drawing.Size(1616, 848);
+            this.Controls.Add(this.removeFromFavoritesBtn);
+            this.Controls.Add(this.addFileToFavoritesBtn);
+            this.Controls.Add(this.favoritesLbx);
             this.Controls.Add(this.takeFromQueueBtn);
             this.Controls.Add(this.addToQueueBtn);
             this.Controls.Add(this.newTabBtn);
@@ -124,7 +170,6 @@
             this.Controls.Add(this.newFileTxt);
             this.Controls.Add(this.newFileBtn);
             this.Controls.Add(this.driveTree);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -142,6 +187,9 @@
         private System.Windows.Forms.Button newTabBtn;
         private System.Windows.Forms.Button addToQueueBtn;
         private System.Windows.Forms.Button takeFromQueueBtn;
+        private System.Windows.Forms.ListBox favoritesLbx;
+        private System.Windows.Forms.Button addFileToFavoritesBtn;
+        private System.Windows.Forms.Button removeFromFavoritesBtn;
     }
 }
 

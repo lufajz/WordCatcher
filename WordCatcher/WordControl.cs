@@ -40,6 +40,7 @@ namespace WordCatcher
             {
                 Word = wordTxt.Text,
                 ExtraInfo = extraInfoTxt.Text,
+                Notes = notesTxt.Text,
                 Texts = new string[]
                 {
                     text1Txt.Text,
