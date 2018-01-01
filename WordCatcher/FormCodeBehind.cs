@@ -114,62 +114,65 @@ namespace WordCatcher
             while (pageToken != null);
         }
 
-        private void SaveRecord(string fileId, WordDefinition word)
+        private void AppendToSheet(string fileId, string range, ValueRange body)
         {
-            var body = new ValueRange();
-            body.Values = new List<IList<object>>()
-            {
-                new List<object>()
-                {
-                    word.Word, word.Texts[0], word.Texts[1], word.Texts[2], word.Texts[3], word.ExtraInfo
-                }
-            };
-
-            var range = "Sheet1";
             var request = _sheetsService.Spreadsheets.Values.Append(body, fileId, range);
             request.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
             var response = request.Execute();
         }
 
+        private Google.Apis.Drive.v3.Data.File SetParent(string fileId, string parentId)
+        {
+            var getRequest = _driveService.Files.Get(fileId);
+            getRequest.Fields = "parents";
+            var file = getRequest.Execute();
+            var previousParents = String.Join(",", file.Parents);
+
+            var updateRequest = _driveService.Files.Update(new Google.Apis.Drive.v3.Data.File(), fileId);
+            updateRequest.Fields = "parents";
+            updateRequest.AddParents = parentId;
+            updateRequest.RemoveParents = previousParents;
+            return updateRequest.Execute();
+        }
+
+        private void SaveRecord(string fileId, WordDefinition word)
+        {
+            var body = new ValueRange {
+                Values = new List<IList<object>> {
+                    new List<object>()
+                    {
+                        word.Word, word.Texts[0], word.Texts[1], word.Texts[2], word.Texts[3], word.ExtraInfo
+                    }
+                }
+            };
+
+            AppendToSheet(fileId, "Sheet1", body);
+        }
+
         private void CreateNewFile(TreeNode node, string name)
         {
-            var folder = (Google.Apis.Drive.v3.Data.File)driveTree.SelectedNode.Tag;
-
             var sheet = new Spreadsheet();
             sheet.Properties = new SpreadsheetProperties()
             {
                 Title = name
             };
-            sheet.Sheets[0].Data.Add(new GridData
-            {
-                RowData = new List<RowData>
-                {
-                    new RowData
-                    {
-                        Values = new List<CellData>
-                        {
-                            new CellData
-                            {
-                                UserEnteredValue = new ExtendedValue { StringValue = "X" }
-                            }
-                        }
-                    }
-
-                }
-            });
 
             var request = _sheetsService.Spreadsheets.Create(sheet);
             sheet = request.Execute();
 
-            var getRequest = _driveService.Files.Get(sheet.SpreadsheetId);
-            getRequest.Fields = "parents, id, name, mimeType";
-            var file = getRequest.Execute();
-            var previousParents = String.Join(",", file.Parents);
-            var updateRequest = _driveService.Files.Update(new Google.Apis.Drive.v3.Data.File(), sheet.SpreadsheetId);
-            updateRequest.Fields = "id, parents";
-            updateRequest.AddParents = folder.Id;
-            updateRequest.RemoveParents = previousParents;
-            file = updateRequest.Execute();
+            var body = new ValueRange
+            {
+                Values = new List<IList<object>> {
+                    new List<object>() { "*", "name", name },
+                    new List<object>() { "*", "card-theme", "Paper - Clear" },
+                    new List<object>() { "Text 1", "Text 2", "Text 3", "Text 4", "Notes", "Extra Info" },
+                }
+            };
+
+            AppendToSheet(sheet.SpreadsheetId, "Sheet1", body);
+
+            var folder = (Google.Apis.Drive.v3.Data.File)driveTree.SelectedNode.Tag;
+            var file = SetParent(sheet.SpreadsheetId, folder.Id);
 
             var fileNode = new TreeNode(name);
             fileNode.Tag = file;

@@ -72,6 +72,7 @@ namespace WordCatcher
             else
             {
                 CreateNewFile(driveTree.SelectedNode, newFileTxt.Text);
+                MessageBox.Show("Created ...");
             }
         }
 
